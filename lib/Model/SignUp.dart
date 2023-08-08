@@ -144,8 +144,8 @@ class _SignUpState extends State<SignUp> {
                               },
                               icon: Icon(
                                 passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                               ),
                               splashRadius: 25,
                             ),
