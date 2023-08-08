@@ -1,7 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class ProfilePic extends StatefulWidget {
   const ProfilePic({super.key});
@@ -17,6 +20,10 @@ class _ProfilePicState extends State<ProfilePic> {
 
   int index = 0;
 
+  String originalImageName = '';
+
+  UploadTask? uploadTask;
+
   Future<void> _pickImageFromCamera() async {
     final selectedImage = await ImagePicker().pickImage(
       source: ImageSource.camera,
@@ -30,14 +37,48 @@ class _ProfilePicState extends State<ProfilePic> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final selectedImage = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
+    try {
+      final selectedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+      if (selectedImage == null) return;
+      final tempimage = File(selectedImage.path);
+      final imageName = path.basenameWithoutExtension(tempimage.path);
+      final newFileName =
+          await tempimage.rename('${tempimage.parent.path}/$imageName.png');
+      log('new image is $newFileName ${tempimage.parent.path}');
 
-    if (selectedImage != null) {
       setState(() {
-        image = File(selectedImage.path);
+        image = newFileName;
+        originalImageName = "$imageName.png";
+        uploadFile();
       });
+    } on Exception catch (e) {
+      log('new image exception is $e');
+    }
+  }
+
+  Future uploadFile() async {
+    try {
+      final path = "users/$originalImageName";
+      final file = File(image!.path);
+
+      final ref = FirebaseStorage.instance.ref().child(path);
+      setState(() {
+        uploadTask = ref.putFile(file);
+      });
+
+      final snapshot = await uploadTask!.whenComplete(() {});
+
+      final url = await snapshot.ref.getDownloadURL();
+
+      log('url $url');
+
+      setState(() {
+        uploadTask = null;
+      });
+    } on Exception catch (e) {
+      log('error upload $e');
     }
   }
 
