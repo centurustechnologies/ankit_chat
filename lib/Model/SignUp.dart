@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp_3/Model/Login.dart';
 
 String? validateEmail(String? value) {
   var pattern =
@@ -111,7 +112,7 @@ class _SignUpState extends State<SignUp> {
                         controller: _passwordTextController,
                         validator: (PassCurrentValue) {
                           RegExp regex = RegExp(
-                              r'^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[!@#\$&*~]).{8,}$');
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                           var passNonNullValue = PassCurrentValue ?? "";
                           if (passNonNullValue.isEmpty) {
                             return ("Password is required");
@@ -162,16 +163,32 @@ class _SignUpState extends State<SignUp> {
                 height: 10,
               ),
               Container(
-                width: 200,
-                decoration: const BoxDecoration(),
+                width: 400,
+                height: 60,
                 padding: const EdgeInsets.all(10),
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
                   child: const Text('SIGN UP'),
                   onPressed: () {
                     if (_nameTextController.text.isEmpty ||
                         _emailTextController.text.isEmpty ||
                         _passwordTextController.text.isEmpty) {
                       log('Empty Field');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text(
+                            "Please fill all the details to Continue",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      );
                     } else {
                       log('Field Not Empty');
                       FirebaseFirestore.instance.collection('chats').add({
@@ -182,6 +199,24 @@ class _SignUpState extends State<SignUp> {
                         'subtitle': "",
                         'time': "",
                         'password': _passwordTextController.text,
+                      }).then((value) {
+                        log('Sign up succesfully');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Colors.blue,
+                            content: Text(
+                              "Congratulation, your account has been successfully created.",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
                       });
                     }
                   },

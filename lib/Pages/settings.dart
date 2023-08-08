@@ -110,12 +110,6 @@ class _SettingScreenState extends State<SettingScreen> {
             subtitle: const Text('Help centre, contact us, privacy policy'),
             onTap: () {},
           ),
-          ListTile(
-            leading: const Icon(Icons.person_2),
-            title: const Text('Log Out'),
-            subtitle: const Text(''),
-            onTap: () {},
-          ),
         ],
       ),
     );

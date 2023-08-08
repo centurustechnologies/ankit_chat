@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,13 +42,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: alreadyLogin.toString().isEmpty
-          ? const LoginPage()
-          : Home(
-              myEmail: alreadyLogin.toString(),
-            ),
+      // home: alreadyLogin.toString().isEmpty
+      //     ? const LoginPage()
+      //     : Home(
+      //         myEmail: alreadyLogin.toString(),
+      //       ),
+      home: Home(myEmail: 'myEmail'),
     );
   }
 
@@ -133,6 +136,19 @@ class _HomeState extends State<Home> {
                   const PopupMenuItem(
                     value: "Settings",
                     child: Text("Settings"),
+                  ),
+                  PopupMenuItem(
+                    value: "Log Out",
+                    child: const Text("Log Out"),
+                    onTap: () {
+                      log("message");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    },
                   ),
                 ];
               },
