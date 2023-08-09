@@ -87,7 +87,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         ListTile(
                           leading: const Icon(Icons.person),
-                          title: const Text('Account'),
+                          title: const Text('Acccount'),
                           subtitle:
                               const Text('Security notifiction, change number'),
                           onTap: () {
