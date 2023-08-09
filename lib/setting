@@ -1,0 +1,70 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:myapp_3/Setting%20screen/SettingsScreen.dart';
+
+class Setting extends StatefulWidget {
+  final String myEmail;
+  const Setting({super.key, required this.myEmail});
+
+  @override
+  State<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends State<Setting> {
+  var storage = const FlutterSecureStorage();
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      onSelected: (value) {
+        switch (value) {
+          case 'Settings':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingScreen(myEmail: widget.myEmail),
+              ),
+            );
+
+          case 'Log Out':
+            log("message");
+            setState(() {
+              storage.delete(key: 'email');
+            });
+            Navigator.pop(context);
+        }
+      },
+      splashRadius: 20,
+      itemBuilder: (BuildContext context) {
+        return [
+          const PopupMenuItem(
+            value: "New group",
+            child: Text("New group"),
+          ),
+          const PopupMenuItem(
+            value: "New broadcast",
+            child: Text("New broadcast"),
+          ),
+          const PopupMenuItem(
+            value: "WhatsApp Web",
+            child: Text("WhatsApp Web"),
+          ),
+          const PopupMenuItem(
+            value: "Starred Message",
+            child: Text("Starred Message"),
+          ),
+          const PopupMenuItem(
+            value: "Settings",
+            child: Text("Settings"),
+          ),
+          PopupMenuItem(
+            value: "Log Out",
+            child: const Text("Log Out"),
+            onTap: () {},
+          ),
+        ];
+      },
+    );
+  }
+}

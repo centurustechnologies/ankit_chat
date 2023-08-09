@@ -51,12 +51,36 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(top: 60),
           child: Column(
             children: [
+              Center(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      splashRadius: 20,
+                    ),
+                    const Text(
+                      "Create Account",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
               Image.asset(
                 "assets/images/signup.png",
                 height: 200,
@@ -191,7 +215,10 @@ class _SignUpState extends State<SignUp> {
                       );
                     } else {
                       log('Field Not Empty');
-                      FirebaseFirestore.instance.collection('chats').add({
+                      FirebaseFirestore.instance
+                          .collection('chats')
+                          .doc(_emailTextController.text)
+                          .set({
                         'email': _emailTextController.text,
                         'image': "",
                         'name': _nameTextController.text,

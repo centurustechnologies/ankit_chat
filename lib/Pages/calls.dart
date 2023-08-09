@@ -16,25 +16,18 @@ class _CallState extends State<Call> {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: ListTile(
-              leading: const Stack(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.green,
-                    backgroundImage: NetworkImage(
-                      'url',
-                    ),
-                    radius: 28,
-                  ),
-                  Positioned(
-                    bottom: 14,
-                    right: 13,
-                    child: Icon(
-                      Icons.link,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ],
+              leading: Container(
+                height: 50,
+                width: 50,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 14, 104, 94),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.link,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
               title: const Text(
                 "Create call link",

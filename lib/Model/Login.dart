@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,6 +45,8 @@ class _LoginPageState extends State<LoginPage> {
   var storage = const FlutterSecureStorage();
 
   bool passwordVisible = true;
+
+  bool showloader = false;
 
   @override
   Widget build(BuildContext context) {
@@ -145,67 +148,88 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                child: const Text(' LOGIN '),
-                onPressed: () {
-                  if (_emailTextController.text.isEmpty ||
-                      _passwordTextController.text.isEmpty) {
-                    log('Empty Field');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text(
-                          "Please fill all the details to Continue",
-                          style: TextStyle(color: Colors.black),
-                        ),
+              SizedBox(
+                width: 250,
+                height: 40,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    );
-                  } else {
-                    log('field not empty');
+                    ),
+                  ),
+                  child: const Text(' LOGIN '),
+                  onPressed: () {
+                    if (_emailTextController.text.isEmpty ||
+                        _passwordTextController.text.isEmpty) {
+                      log('Empty Field');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.amber,
+                          content: Text(
+                            "Please fill all the details to Continue",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                        ),
+                      );
+                    } else {
+                      log('field not empty');
 
-                    FirebaseFirestore.instance
-                        .collection('chats')
-                        .where('email', isEqualTo: _emailTextController.text)
-                        .where('password',
-                            isEqualTo: _passwordTextController.text)
-                        .get()
-                        .then(
-                      (value) {
-                        if (value.docs.isNotEmpty) {
-                          log('login succesful');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.blue,
-                              content: Text(
-                                "Login Successful",
-                                style: TextStyle(color: Colors.black),
+                      FirebaseFirestore.instance
+                          .collection('chats')
+                          .where('email', isEqualTo: _emailTextController.text)
+                          .where('password',
+                              isEqualTo: _passwordTextController.text)
+                          .get()
+                          .then(
+                        (value) {
+                          if (value.docs.isNotEmpty) {
+                            log('login succesful');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.blue,
+                                content: Text(
+                                  "Login Successful",
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
-                            ),
-                          );
+                            );
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Home(
-                                myEmail: _emailTextController.text,
-                              ),
-                            ),
-                          );
-                        } else {
-                          log('Please Enter Details');
+                            storeLoginData(_emailTextController.text);
+                            Timer(const Duration(seconds: 1), () {
+                              setState(() {
+                                showloader = false;
+                              });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Please fill the correct details",
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Home(
+                                    myEmail: _emailTextController.text,
+                                  ),
+                                ),
+                              );
+                            });
+                          } else {
+                            log('Please Enter Details');
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  "Please fill the correct details",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    );
-                  }
-                },
+                            );
+                          }
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
               const SizedBox(
                 height: 10,

@@ -7,8 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:myapp_3/Model/Login.dart';
 import 'package:myapp_3/Pages/calls.dart';
 import 'package:myapp_3/Pages/chat.dart';
-import 'package:myapp_3/Pages/settings.dart';
 import 'package:myapp_3/Pages/status.dart';
+import 'package:myapp_3/Setting%20screen/SettingsScreen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,14 +42,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: alreadyLogin.toString().isEmpty
-      //     ? const LoginPage()
-      //     : Home(
-      //         myEmail: alreadyLogin.toString(),
-      //       ),
-      home: Home(myEmail: 'myEmail'),
+      home: alreadyLogin.toString().isEmpty
+          ? const LoginPage()
+          : Home(
+              myEmail: alreadyLogin.toString(),
+            ),
+      // home: Home(myEmail: 'myEmail'),
     );
   }
 
@@ -76,6 +76,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var storage = const FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -109,9 +111,17 @@ class _HomeState extends State<Home> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SettingScreen(),
+                        builder: (context) =>
+                            SettingScreen(myEmail: widget.myEmail),
                       ),
                     );
+
+                  case 'Log Out':
+                    log("message");
+                    setState(() {
+                      storage.delete(key: 'email');
+                    });
+                    Navigator.pop(context);
                 }
               },
               splashRadius: 20,
@@ -140,15 +150,7 @@ class _HomeState extends State<Home> {
                   PopupMenuItem(
                     value: "Log Out",
                     child: const Text("Log Out"),
-                    onTap: () {
-                      log("message");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    },
+                    onTap: () {},
                   ),
                 ];
               },
@@ -186,7 +188,9 @@ class _HomeState extends State<Home> {
             ),
 
             // for Status
-            const Status(),
+            Status(
+              myEmail: widget.myEmail,
+            ),
 
             // for Calls
             const Call(),
