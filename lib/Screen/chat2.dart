@@ -14,7 +14,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: width,
-        backgroundColor: const Color(0xFF075E54),
+        backgroundColor: const Color.fromARGB(255, 8, 71, 123),
         leading: Padding(
           padding: const EdgeInsets.only(left: 2),
           child: Row(

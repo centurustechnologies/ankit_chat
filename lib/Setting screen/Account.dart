@@ -12,7 +12,7 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 12, 75, 68),
+          backgroundColor: const Color.fromARGB(255, 8, 71, 123),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,

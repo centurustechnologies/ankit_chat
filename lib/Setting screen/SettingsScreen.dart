@@ -17,7 +17,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF075E54),
+        backgroundColor: const Color.fromARGB(255, 8, 71, 123),
         title: const Text("Settings"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

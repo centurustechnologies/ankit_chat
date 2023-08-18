@@ -107,7 +107,7 @@ class _ProfilePicState extends State<ProfilePic> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 12, 75, 68),
+        backgroundColor: const Color.fromARGB(255, 8, 71, 123),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,

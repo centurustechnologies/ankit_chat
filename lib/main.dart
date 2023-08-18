@@ -84,19 +84,12 @@ class _HomeState extends State<Home> {
       length: 3, // Update this with the number of tabs
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFF075E54),
+          backgroundColor: const Color.fromARGB(255, 8, 71, 123),
           title: const Text(
-            "WhatsApp Advance",
+            "Chat App",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.photo_camera_outlined,
-              ),
-              splashRadius: 20,
-            ),
             IconButton(
               onPressed: () {},
               icon: const Icon(
