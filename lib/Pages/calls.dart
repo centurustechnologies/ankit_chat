@@ -20,7 +20,7 @@ class _CallState extends State<Call> {
                 height: 50,
                 width: 50,
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 14, 104, 94),
+                  color: Color.fromARGB(255, 8, 71, 123),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

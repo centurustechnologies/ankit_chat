@@ -1,13 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  final String userEmail, myEmail;
+  const ChatScreen({
+    Key? key,
+    required this.userEmail,
+    required this.myEmail,
+  }) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  String getEmailCombination() {
+    List<String> emails = [widget.myEmail, widget.userEmail];
+    emails.sort();
+    return "${emails[0]}-${emails[1]}";
+  }
+
+  TextEditingController msgController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -86,102 +101,174 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 221, 96),
+          color: Colors.greenAccent,
         ),
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Wrap(
-                    children: [
-                      Align(
-                        alignment: index.isOdd
-                            ? Alignment.centerLeft
-                            : Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: index.isOdd
-                                  ? Colors.white
-                                  : const Color.fromARGB(255, 119, 214, 122),
-                              borderRadius: BorderRadius.circular(6),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    spreadRadius: 1),
-                              ],
-                            ),
-                            child: const Text("Data"),
-                          ),
-                        ),
-                      )
-                    ],
-                  );
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('msgs')
+                    .doc(getEmailCombination())
+                    .collection('msg')
+                    .orderBy('date_time', descending: true)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot documentSnapshot =
+                            snapshot.data!.docs[index];
+                        if (documentSnapshot['chatters'] ==
+                            getEmailCombination()) {
+                          return Wrap(
+                            children: [
+                              Align(
+                                alignment: documentSnapshot['email'] ==
+                                        widget.userEmail
+                                    ? Alignment.centerLeft
+                                    : Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: documentSnapshot['email'] ==
+                                              widget.userEmail
+                                          ? Colors.white
+                                          : const Color.fromARGB(
+                                              255, 119, 214, 122),
+                                      borderRadius: BorderRadius.circular(6),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.1),
+                                            blurRadius: 10,
+                                            spreadRadius: 1),
+                                      ],
+                                    ),
+                                    child: Text(documentSnapshot['msg']),
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        }
+                      },
+                    );
+                  }
+                  return Container();
                 },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Container(
-                padding: const EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          spreadRadius: 1)
-                    ]),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.emoji_emotions_outlined,
-                      ),
-                      splashRadius: 20,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
+              child: Row(
+                children: [
+                  Container(
+                    width: 320,
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 1)
+                        ]),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.emoji_emotions_outlined,
+                              ),
+                              splashRadius: 20,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                controller: msgController,
+                                maxLines: 5,
+                                minLines: 1,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Type a message...."),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.attach_file),
+                              splashRadius: 20,
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.photo_camera,
+                              ),
+                              splashRadius: 20,
+                            ),
+                          ],
                         ),
-                      ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.attach_file),
-                      splashRadius: 20,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.photo_camera,
-                      ),
-                      splashRadius: 20,
-                    ),
-                    IconButton(
-                      onPressed: () {},
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Container(
+                    width: 44,
+                    height: 44,
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 8, 71, 123),
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 1)
+                        ]),
+                    child: IconButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('msgs')
+                            .doc(getEmailCombination())
+                            .collection('msg')
+                            .add(
+                          {
+                            'msg': msgController.text,
+                            'email': widget.myEmail,
+                            'date_time': DateTime.now().toString(),
+                            'chatters': getEmailCombination(),
+                          },
+                        );
+                      },
                       icon: const Icon(
                         Icons.send,
-                        color: Colors.green,
+                        color: Colors.white,
                       ),
                       splashRadius: 20,
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget emojiSelect() {
+    return EmojiPicker(
+      onEmojiSelected: (category, emoji) {
+        print(emoji);
+      },
     );
   }
 }

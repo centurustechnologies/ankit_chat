@@ -24,56 +24,60 @@ class _ChatpageinState extends State<Chatpagein> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (BuildContext context, index) {
               DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
+              if (documentSnapshot.id != widget.myEmail) {
+                return InkWell(
+                  onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ChatScreen(),
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(documentSnapshot['image']),
-                        radius: 30,
-                      ),
-                      title: Text(
-                        documentSnapshot["name"],
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Row(
-                        children: [
-                          const Icon(
-                            Icons.done_all,
-                            size: 16,
-                          ),
-                          Text(
-                            documentSnapshot['subtitle'],
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      trailing: Text(
-                        documentSnapshot['time'],
-                        style: const TextStyle(color: Colors.black),
+                      builder: (context) => ChatScreen(
+                        myEmail: widget.myEmail,
+                        userEmail: documentSnapshot['email'],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 20, left: 80),
-                      child: Divider(
-                        height: 0,
-                        thickness: 0.4,
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(documentSnapshot['image']),
+                          radius: 30,
+                        ),
+                        title: Text(
+                          documentSnapshot["name"],
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            const Icon(
+                              Icons.done_all,
+                              size: 16,
+                            ),
+                            Text(
+                              documentSnapshot['subtitle'],
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        trailing: Text(
+                          documentSnapshot['time'],
+                          style: const TextStyle(color: Colors.black),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              );
+                      const Padding(
+                        padding: EdgeInsets.only(right: 20, left: 80),
+                        child: Divider(
+                          height: 0,
+                          thickness: 0.4,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+              return Container();
             },
           );
         }

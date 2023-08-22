@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:myapp_3/Model/CompleteProfile.dart';
 import 'package:myapp_3/Model/Login.dart';
 import 'package:myapp_3/Pages/calls.dart';
 import 'package:myapp_3/Pages/chat.dart';
@@ -44,11 +45,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: alreadyLogin.toString().isEmpty
-          ? const LoginPage()
-          : Home(
-              myEmail: alreadyLogin.toString(),
-            ),
+      home: CompleteProfile(
+        myEmail: '',
+      ),
+
+      //  alreadyLogin.toString().isEmpty
+      //     ? const LoginPage()
+      //     : Home(
+      //         myEmail: alreadyLogin.toString(),
+      //       ),
       // home: Home(myEmail: 'myEmail'),
     );
   }
@@ -84,6 +89,7 @@ class _HomeState extends State<Home> {
       length: 3, // Update this with the number of tabs
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: const Color.fromARGB(255, 8, 71, 123),
           title: const Text(
             "Chat App",
