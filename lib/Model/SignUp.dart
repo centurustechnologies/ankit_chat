@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp_3/Model/CompleteProfile.dart';
 import 'package:myapp_3/Model/Login.dart';
 
 String? validateEmail(String? value) {
@@ -241,7 +242,9 @@ class _SignUpState extends State<SignUp> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
+                            builder: (context) => const CompleteProfile(
+                              myEmail: '',
+                            ),
                           ),
                         );
                       });
