@@ -42,6 +42,7 @@ class _ChatpageinState extends State<Chatpagein> {
                     children: [
                       ListTile(
                         leading: CircleAvatar(
+                          backgroundColor: Colors.white,
                           backgroundImage:
                               NetworkImage(documentSnapshot['image']),
                           radius: 30,

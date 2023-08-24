@@ -3,7 +3,6 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  
   final String userEmail, myEmail, userName, userPic, userTime;
   const ChatScreen({
     Key? key,
@@ -24,23 +23,24 @@ class _ChatScreenState extends State<ChatScreen> {
     emails.sort();
     return "${emails[0]}-${emails[1]}";
   }
-  String lastSeenTime = ''; 
+
+  String lastSeenTime = '';
 
   Future<void> fetchLastSeenTime() async {
-  try {
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc('your_user_id_here')
-        .get();
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc('your_user_id_here')
+          .get();
 
-    setState(() {
-      lastSeenTime = userSnapshot['last_seen']; // Assuming 'last_seen' is the field in Firestore
-    });
-  } catch (error) {
-    print('Error fetching last seen time: $error');
+      setState(() {
+        lastSeenTime = userSnapshot[
+            'last_seen']; // Assuming 'last_seen' is the field in Firestore
+      });
+    } catch (error) {
+      print('Error fetching last seen time: $error');
+    }
   }
-}
-
 
   TextEditingController msgController = TextEditingController();
   IconData iconToShow = Icons.mic;
@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-      fetchLastSeenTime();
+    fetchLastSeenTime();
     msgController.addListener(
       () {
         setState(
@@ -146,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.greenAccent,
+          color: Colors.pinkAccent,
         ),
         child: Column(
           children: [
