@@ -156,110 +156,135 @@ class _CompleteProfileState extends State<CompleteProfile> {
         backgroundColor: const Color.fromARGB(255, 8, 71, 123),
         title: Text("Complete Profile"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.white,
-              child: Center(
-                child: SizedBox(
-                  height: 140,
-                  width: 140,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      CircleAvatar(
-                        radius: 70,
-                        backgroundImage: NetworkImage(""),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          width: 55,
-                          height: 55,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
-                          ),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            onPressed: () {
-                              showPhotoOption();
-                            },
-                            child: const Icon(Icons.photo_camera,
-                                color: Colors.white, size: 25),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('chats').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs
+                    .where(
+                      (element) =>
+                          element['email'].toString().contains(widget.myEmail),
+                    )
+                    .length,
+                itemBuilder: (context, index) {
+                  final documentSnapshot = snapshot.data!.docs
+                      .where(
+                        (element) => element['email']
+                            .toString()
+                            .contains(widget.myEmail),
+                      )
+                      .elementAt(index);
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          child: Center(
+                            child: SizedBox(
+                              height: 140,
+                              width: 140,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 70,
+                                    backgroundImage: NetworkImage(""),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      width: 55,
+                                      height: 55,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: MaterialButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        onPressed: () {
+                                          showPhotoOption();
+                                        },
+                                        child: const Icon(Icons.photo_camera,
+                                            color: Colors.white, size: 25),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: TextField(
-                decoration: InputDecoration(labelText: "Full Name"),
-              ),
-            ),
-            SizedBox(
-              height: 60,
-            ),
-            Container(
-              width: 400,
-              height: 60,
-              padding: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: TextField(
+                            decoration: InputDecoration(labelText: "Full Name"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        ),
+                        Container(
+                          width: 400,
+                          height: 60,
+                          padding: const EdgeInsets.all(10),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                              child: const Text('Save'),
+                              onPressed: () {
+                                if (_nameTextController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text(
+                                        "Please fill the details.",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.blue,
+                                      content: Text(
+                                        "Congrulation, your Profile has been successfully created.",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Home(
+                                        myEmail: '',
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }),
+                        ),
+                      ],
                     ),
-                  ),
-                  child: const Text('Save'),
-                  onPressed: () {
-                    if (_nameTextController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text(
-                            "Please fill the details.",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.blue,
-                          content: Text(
-                            "Congrulation, your Profile has been successfully created.",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Home(
-                            myEmail: '',
-                          ),
-                        ),
-                      );
-                    }
-                  }),
-            ),
-          ],
-        ),
-      ),
+                  );
+                },
+              );
+            }
+            return Container();
+          }),
     );
   }
 

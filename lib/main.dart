@@ -45,15 +45,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CompleteProfile(
-        myEmail: '',
-      ),
+      home:
 
-      //  alreadyLogin.toString().isEmpty
-      //     ? const LoginPage()
-      //     : Home(
-      //         myEmail: alreadyLogin.toString(),
-      //       ),
+          //  CompleteProfile(
+          //   myEmail: '',
+          // ),
+
+          alreadyLogin.toString().isEmpty
+              ? const LoginPage()
+              : Home(
+                  myEmail: alreadyLogin.toString(),
+                ),
       // home: Home(myEmail: 'myEmail'),
     );
   }
@@ -114,6 +116,7 @@ class _HomeState extends State<Home> {
                             SettingScreen(myEmail: widget.myEmail),
                       ),
                     );
+                    break;
 
                   case 'Log Out':
                     log("message");

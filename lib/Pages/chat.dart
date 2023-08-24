@@ -32,6 +32,9 @@ class _ChatpageinState extends State<Chatpagein> {
                       builder: (context) => ChatScreen(
                         myEmail: widget.myEmail,
                         userEmail: documentSnapshot['email'],
+                        userName: documentSnapshot['name'],
+                        userPic: documentSnapshot['image'],
+                        userTime: documentSnapshot['time'],
                       ),
                     ),
                   ),
